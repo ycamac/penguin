@@ -18,8 +18,12 @@ with st.expander("Data"):
   st.write("Tarjet Variables")
   y_raw = df.species
   y_raw
+
+  st.write("Descriptive Statistics")
+  des = df.describe()
+  des
   
-with st.expander("Data Visialization"):
+with st.expander("Data Visualization"):
   pass
 with st.expander("Input Data"):
   pass
