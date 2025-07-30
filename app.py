@@ -10,6 +10,15 @@ with st.expander("Data"):
   st.write("**Raw Data**")
   df = pd.read_csv("https://raw.githubusercontent.com/dataprofessor/data/master/penguins_cleaned.csv")
   df
+
+  st.write("Input Variables")
+  X_raw = df.drop('species',axis=1)
+  X_raw
+  
+  st.write("Tarjet Variables")
+  y_raw = df.species
+  y_raw
+  
 with st.expander("Data Visialization"):
   pass
 with st.expander("Input Data"):
