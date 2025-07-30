@@ -59,5 +59,22 @@ with st.expander("Input data"):
   input_df
   st.write("**Combined data**")
   input_penguins
-  
+
+#One hot enconding for X
+encode = ['island','sex']
+df_penguins = pd.get_dummies(inout_penguins, prefix = encode)
+X = df_penguis[1:]
+input_row = df_penguis[:1]
+
+#One hot encoding for y
+tarjet_mapper = {
+  'Adelie':0,
+  'Chinstrap':1,
+  'Gentoo':2  
+}
+
+def target_encode(val):
+  return target_mapper[val]
+
+y = y_raw.apply(target_encode)
   
