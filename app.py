@@ -23,9 +23,9 @@ with st.expander("Data"):
   des = df.describe()
   des
   
-  st.write("Information about data)
+  st.write("Information about data")
   inf = df.info()
-  inf
+  st.write(inf)
   
 with st.expander("Data Visualization"):
   pass
