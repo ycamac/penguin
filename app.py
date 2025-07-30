@@ -28,7 +28,8 @@ with st.expander("Data"):
   st.write(inf)
   
 with st.expander("Data Visualization"):
-  pass
+  st.scatter_chart(data = df, x='bill_length_mm',y='body_mass_g', color='species')
+  
 with st.expander("Input Data"):
   pass
 with st.expander("Data Preparation"):
