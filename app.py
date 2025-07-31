@@ -1,78 +1,76 @@
 import pandas as pd
-import numpy
+import numpy as np
 import streamlit as st
+import altair as alt
 from sklearn.ensemble import RandomForestClassifier
 
-st.title('Penguine Specie Prediction ML App')
+
+st.title('🤖 Penguine Specie Prediction ML App')
 st.info('This is a end-to-end Machine Learning App')
 
-with st.expander("Data"):
-  st.write("**Raw Data**")
+with st.expander('Data'):
+  st.write('**Raw data**')
   df = pd.read_csv("https://raw.githubusercontent.com/dataprofessor/data/master/penguins_cleaned.csv")
   df
 
-  st.write("Input Variables")
-  X_raw = df.drop('species',axis=1)
+  st.write('**X**')
+  X_raw = df.drop('species', axis=1)
   X_raw
-  
-  st.write("Tarjet Variables")
+
+  st.write('**y**')
   y_raw = df.species
   y_raw
 
-  st.write("Descriptive Statistics")
-  des = df.describe()
-  des
+with st.expander('Data visualization'):
+  #st.scatter_chart(data=df, x='bill_length_mm', y='body_mass_g', color='species')
   
-  st.write("Information about data")
-  inf = df.info()
-  st.write(inf)
-  
-with st.expander("Data Visualization"):
-  st.scatter_chart(data = df, x='bill_length_mm',y='body_mass_g', color='species')
-  
-with st.expander("Input Data"):
-  pass
-with st.expander("Data Preparation"):
-  pass
+
+  chart = alt.Chart(df).mark_circle(size=60).encode(
+    x='bill_length_mm',
+    y='body_mass_g',
+    color='species',
+    tooltip=['species', 'bill_length_mm', 'body_mass_g']
+).interactive()
+  st.altair_chart(chart, use_container_width=True)
+
+# Input features
 with st.sidebar:
-  st.header("Input Variables")
-  island = st.selectbox('Island',('Biscoe','Dream','Torgersen'))
-  bill_length_mm = st.slider('Bill length (mm)',32.1,59.6,43.9)
-  bill_depth_mm = st.slider('Bill depth (mm)', 13.1,21.5,17.2)
-  flipper_length_mm = st.slider('Flipper length (mm)', 172,231,201)
-  body_mass_g = st.slider('Body mass (g)', 2700,6300,4207)
-  gender = st.selectbox('Gender', ('male','female'))
+  st.header('Input features')
+  island = st.selectbox('Island', ('Biscoe', 'Dream', 'Torgersen'))
+  bill_length_mm = st.slider('Bill length (mm)', 32.1, 59.6, 43.9)
+  bill_depth_mm = st.slider('Bill depth (mm)', 13.1, 21.5, 17.2)
+  flipper_length_mm = st.slider('Flipper length (mm)', 172.0, 231.0, 201.0)
+  body_mass_g = st.slider('Body mass (g)', 2700.0, 6300.0, 4207.0)
+  gender = st.selectbox('Gender', ('male', 'female'))
+  
+  # Create a DataFrame for the input features
+  data = {'island': island,
+          'bill_length_mm': bill_length_mm,
+          'bill_depth_mm': bill_depth_mm,
+          'flipper_length_mm': flipper_length_mm,
+          'body_mass_g': body_mass_g,
+          'sex': gender}
+  input_df = pd.DataFrame(data, index=[0])
+  input_penguins = pd.concat([input_df, X_raw], axis=0)
 
-  data = {
-    'island': island,
-    'bill_length_mm': bill_length_mm,
-    'bill_depth_mm': bill_depth_mm,
-    'flipper_length_mm': flipper_length_mm,
-    'body_mass_g': body_mass_g,
-    'gender': gender    
-  }
-  input_df = pd.DataFrame(data, index = [0])
-  input_penguins =  pd.concat([input_df, X_raw], axis=0)
-
-with st.expander("Input data"):
-  st.write("**Input data**")
+with st.expander('Input features'):
+  st.write('**Input penguin**')
   input_df
-  st.write("**Combined data**")
+  st.write('**Combined penguins data**')
   input_penguins
 
-#One hot enconding for X
-encode = ['island','sex']
-df_penguins = pd.get_dummies(input_penguins, prefix = encode)
-X = df_penguis[1:]
-input_row = df_penguis[:1]
+# Data preparation
+# Encode X
+encode = ['island', 'sex']
+df_penguins = pd.get_dummies(input_penguins, prefix=encode)
 
-#One hot encoding for y
-tarjet_mapper = {
-  'Adelie':0,
-  'Chinstrap':1,
-  'Gentoo':2  
-}
+X = df_penguins[1:]
+input_row = df_penguins[:1]
 
+# Encode y
+target_mapper = {'Adelie': 0,
+                 'Chinstrap': 1,
+                 'Gentoo': 2}
 def target_encode(val):
   return target_mapper[val]
 
